@@ -158,6 +158,7 @@ class IcloudAccount:
 
     def update_devices(self) -> None:
         """Update iCloud devices."""
+        _LOGGER.debug("Updating devices...")
         if self.api is None:
             return
 
@@ -307,6 +308,8 @@ class IcloudAccount:
 
     def keep_alive(self, now=None) -> None:
         """Keep the API alive."""
+        _LOGGER.debug("Keep alive skipped...")
+        return
         if self.api is None:
             self.setup()
 
