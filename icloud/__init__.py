@@ -23,9 +23,6 @@ from .const import (
     STORAGE_VERSION,
 )
 
-import logging
-_LOGGER = logging.getLogger(__name__)
-
 ATTRIBUTION = "Data provided by Apple iCloud"
 
 # entity attributes
@@ -77,7 +74,6 @@ CONFIG_SCHEMA = cv.removed(DOMAIN, raise_if_present=False)
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up an iCloud account from a config entry."""
 
-    _LOGGER.debug('Config entries: %s - %s', entry, entry.pref_disable_polling)
     hass.data.setdefault(DOMAIN, {})
 
     username = entry.data[CONF_USERNAME]
