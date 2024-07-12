@@ -4,9 +4,12 @@ Quickly customize core components. Maybe some will graduate into HACS repositori
 
 ## icloud
 
-*  icloud: option to disable location tracking (https://github.com/fopina/hass-custom-components/pull/1)
-
+*  icloud: option to disable location tracking
+  * https://github.com/fopina/hass-custom-components/pull/1
+  * https://github.com/home-assistant/core/pull/117984
 
 ## tcp
 
-*  tcp: use available flag to reflect connection errors (https://github.com/fopina/hass-custom-components/pull/2)
+*  tcp: use available flag to reflect connection errors
+  * https://github.com/fopina/hass-custom-components/pull/2
+  * https://github.com/home-assistant/core/pull/117602
