@@ -1,7 +1,7 @@
 {
   "domain": "tcp",
   "name": "TCP",
-  "version": "1.0.0-fop1",
+  "version": "1.0.1-fop1",
   "codeowners": [],
   "documentation": "https://www.home-assistant.io/integrations/tcp",
   "iot_class": "local_polling"
