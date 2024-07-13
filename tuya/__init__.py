@@ -1,4 +1,5 @@
 """Support for Tuya Smart devices."""
+
 from __future__ import annotations
 
 import logging
@@ -35,6 +36,8 @@ from .const import (
 logging.getLogger("tuya_sharing").setLevel(logging.CRITICAL)
 _LOGGER = logging.getLogger(__name__)
 
+type TuyaConfigEntry = ConfigEntry[HomeAssistantTuyaData]
+
 
 class HomeAssistantTuyaData(NamedTuple):
     """Tuya data stored in the Home Assistant data object."""
@@ -43,7 +46,7 @@ class HomeAssistantTuyaData(NamedTuple):
     listener: SharingDeviceListener
 
 
-async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+async def async_setup_entry(hass: HomeAssistant, entry: TuyaConfigEntry) -> bool:
     """Async setup hass config entry."""
     if CONF_APP_TYPE in entry.data:
         raise ConfigEntryAuthFailed("Authentication failed. Please re-authenticate.")
@@ -74,9 +77,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         raise
 
     # Connection is successful, store the manager & listener
-    hass.data.setdefault(DOMAIN, {})[entry.entry_id] = HomeAssistantTuyaData(
-        manager=manager, listener=listener
-    )
+    entry.runtime_data = HomeAssistantTuyaData(manager=manager, listener=listener)
 
     # Cleanup device registry
     await cleanup_device_registry(hass, manager)
@@ -109,18 +110,17 @@ async def cleanup_device_registry(hass: HomeAssistant, device_manager: Manager) 
                 break
 
 
-async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+async def async_unload_entry(hass: HomeAssistant, entry: TuyaConfigEntry) -> bool:
     """Unloading the Tuya platforms."""
     if unload_ok := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
-        tuya: HomeAssistantTuyaData = hass.data[DOMAIN][entry.entry_id]
+        tuya = entry.runtime_data
         if tuya.manager.mq is not None:
             tuya.manager.mq.stop()
         tuya.manager.remove_device_listener(tuya.listener)
-        del hass.data[DOMAIN][entry.entry_id]
     return unload_ok
 
 
-async def async_remove_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
+async def async_remove_entry(hass: HomeAssistant, entry: TuyaConfigEntry) -> None:
     """Remove a config entry.
 
     This will revoke the credentials from Tuya.
@@ -185,7 +185,7 @@ class TokenListener(SharingTokenListener):
     def __init__(
         self,
         hass: HomeAssistant,
-        entry: ConfigEntry,
+        entry: TuyaConfigEntry,
     ) -> None:
         """Init TokenListener."""
         self.hass = hass
