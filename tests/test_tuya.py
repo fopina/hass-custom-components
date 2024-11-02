@@ -12,6 +12,7 @@ from local_tuya_config import (
     CONF_TOKEN_INFO,
     MY_ACCESS_KEY,
     MY_ACCESS_SECRET,
+    MY_ACCESS_UI,
     CONF_TEST_DEVICE_ID,
 )
 
@@ -62,6 +63,9 @@ ACCESS_KEY = MY_ACCESS_SECRET
 # Init OpenAPI and connect
 openapi = TuyaOpenAPI(CONF_ENDPOINT, ACCESS_ID, ACCESS_KEY)
 openapi.connect()
+
+response = openapi.get(f"/v1.0/users/{MY_ACCESS_UI}/devices")
+print(response)
 
 # Call any API from Tuya
 response = openapi.get(f"/v1.0/devices/{CONF_TEST_DEVICE_ID}/statistics/total?code=add_ele", dict())
